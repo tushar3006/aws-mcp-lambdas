@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 AWS_PROFILE = os.environ.get('AWS_PROFILE')
 logger.info(f'AWS_PROFILE: {AWS_PROFILE}')
 
-AWS_REGION = os.environ.get('AWS_REGION')
+AWS_REGION = os.environ.get('AWS_REGION', 'us-west-1')
 logger.info(f'AWS_REGION: {AWS_REGION}')
 
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
@@ -70,7 +70,7 @@ if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
         region_name=AWS_REGION
     )
 else:
-    session = boto3.Session()
+    session = boto3.Session(region_name=AWS_REGION)
 
 
 logger.info(f'Using AWS profile---------------: {AWS_PROFILE}, {session}')
