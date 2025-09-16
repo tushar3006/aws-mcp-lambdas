@@ -76,7 +76,6 @@ else:
     schemas_client = boto3.client('schemas', region_name=AWS_REGION)
 
 
-
 logger.info(f'Using AWS profile---------------: {AWS_PROFILE}, {session}')
 
 
