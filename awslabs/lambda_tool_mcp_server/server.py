@@ -69,15 +69,18 @@ if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
         aws_session_token=AWS_SESSION_TOKEN,
         region_name=AWS_REGION
     )
+    lambda_client = session.client('lambda')
+    schemas_client = session.client('schemas')
 else:
-    session = boto3.Session(region_name=AWS_REGION)
+    lambda_client = boto3.client('lambda', region_name=region_name)
+    schemas_client = boto3.client('schemas', region_name=region_name)
+
 
 
 logger.info(f'Using AWS profile---------------: {AWS_PROFILE}, {session}')
 
 
-lambda_client = session.client('lambda')
-schemas_client = session.client('schemas')
+
 
 mcp = FastMCP(
     'awslabs.lambda-tool-mcp-server',
