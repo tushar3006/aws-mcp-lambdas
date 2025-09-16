@@ -72,8 +72,8 @@ if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
     lambda_client = session.client('lambda')
     schemas_client = session.client('schemas')
 else:
-    lambda_client = boto3.client('lambda', region_name=region_name)
-    schemas_client = boto3.client('schemas', region_name=region_name)
+    lambda_client = boto3.client('lambda', region_name=AWS_REGION)
+    schemas_client = boto3.client('schemas', region_name=AWS_REGION)
 
 
 
