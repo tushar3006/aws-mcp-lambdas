@@ -336,26 +336,26 @@ def register_lambda_functions():
         
         
         logger.info('Registering Lambda functions as individual tools Custom')
-        all_functions = list_all_lambdas(AWS_REGION)
+        # all_functions = list_all_lambdas(AWS_REGION)
         
-        # Get all functions with pagination
-        # all_functions = []
-        # next_marker = None
+        Get all functions with pagination
+        all_functions = []
+        next_marker = None
         
-        # while True:
-        #     # Prepare the list_functions call with optional marker for pagination
-        #     list_params = {}
-        #     if next_marker:
-        #         list_params['Marker'] = next_marker
+        while True:
+            # Prepare the list_functions call with optional marker for pagination
+            list_params = {}
+            if next_marker:
+                list_params['Marker'] = next_marker
             
-        #     functions_response = lambda_client.list_functions(**list_params)
-        #     logger.info(f'{json.dumps(functions_response, indent=2)}')
-        #     all_functions.extend(functions_response['Functions'])
+            functions_response = lambda_client.list_functions(**list_params)
+            logger.info(f'{json.dumps(functions_response, indent=2)}')
+            all_functions.extend(functions_response['Functions'])
             
-        #     # Check if there are more functions to fetch
-        #     next_marker = functions_response.get('NextMarker')
-        #     if not next_marker:
-        #         break
+            # Check if there are more functions to fetch
+            next_marker = functions_response.get('NextMarker')
+            if not next_marker:
+                break
                 
         logger.info(f'Total Lambda functions found: {len(all_functions)}')
 
