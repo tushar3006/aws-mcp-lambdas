@@ -86,11 +86,11 @@ def list_all_lambdas(region_name):
 
     :param region_name: The AWS region to check for Lambda functions.
     """
-    print("Triggered New Function")
+    logger.info("Triggered New Function")
     try:
         # Create a Boto3 Lambda client
         lambda_client = boto3.client('lambda', region_name=region_name)
-        print(f'Lambda Client With Boto3 {lambda_client}')
+        logger.info(f'Lambda Client With Boto3 {lambda_client}')
 
         # Initialize a list to hold all function names
         function_names = []
@@ -104,20 +104,20 @@ def list_all_lambdas(region_name):
             for function in page['Functions']:
                 function_names.append(function['FunctionName'])
                 
-        print(f'Function Names with New Client {function_names}')
+        logger.info(f'Function Names with New Client {function_names}')
 
         # Check if any functions were found
         if function_names:
-            print(f"Found {len(function_names)} Lambda functions in the '{region_name}' region:")
+            logger.info(f"Found {len(function_names)} Lambda functions in the '{region_name}' region:")
             for name in function_names:
-                print(f"- {name}")
+                logger.info(f"- {name}")
         else:
-            print(f"No Lambda functions found in the '{region_name}' region.")
+            logger.info(f"No Lambda functions found in the '{region_name}' region.")
         
         return function_names    
 
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(f"An error occurred: {e}")
 
 
 mcp = FastMCP(
