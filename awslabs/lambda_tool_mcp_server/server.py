@@ -81,6 +81,46 @@ logger.info(f'Using AWS profile---------------: {AWS_PROFILE}')
 
 
 
+def list_all_lambdas(region_name):
+    """
+    Lists all AWS Lambda functions in a specified region.
+
+    :param region_name: The AWS region to check for Lambda functions.
+    """
+    logger.info("Triggered New Function")
+    try:
+        # Create a Boto3 Lambda client
+        lambda_client = boto3.client('lambda', region_name=region_name)
+        logger.info(f'Lambda Client With Boto3 {lambda_client}')
+
+        # Initialize a list to hold all function names
+        function_names = []
+
+        # Use a paginator to handle more than 50 functions (the default list_functions limit)
+        paginator = lambda_client.get_paginator('list_functions')
+        response_iterator = paginator.paginate()
+
+        # Iterate through the pages of the response
+        for page in response_iterator:
+            for function in page['Functions']:
+                function_names.append(function['FunctionName'])
+                
+        logger.info(f'Function Names with New Client {function_names}')
+
+        # Check if any functions were found
+        if function_names:
+            print(f"Found {len(function_names)} Lambda functions in the '{region_name}' region:")
+            for name in function_names:
+                print(f"- {name}")
+        else:
+            print(f"No Lambda functions found in the '{region_name}' region.")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+
+
+
 mcp = FastMCP(
     'awslabs.lambda-tool-mcp-server',
     instructions="""Use AWS Lambda functions to improve your answers.
@@ -292,6 +332,10 @@ def register_lambda_functions():
     """Register Lambda functions as individual tools."""
     try:
         logger.info('Registering Lambda functions as individual tools...')
+        
+        
+        logger.info('Registering Lambda functions as individual tools Custom')
+        list_all_lambdas(AWS_REGION)
         
         # Get all functions with pagination
         all_functions = []
