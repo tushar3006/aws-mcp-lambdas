@@ -91,7 +91,9 @@ def list_all_lambdas(region_name):
         # Create a Boto3 Lambda client
         lambda_client = boto3.client('lambda', region_name=region_name)
         logger.info(f'Lambda Client With Boto3 {lambda_client}')
-
+        sts = boto3.client("sts")
+        identity = sts.get_caller_identity()
+        logger.info(f"Client Running as: {identity}")
         # Initialize a list to hold all function names
         function_names = []
 
