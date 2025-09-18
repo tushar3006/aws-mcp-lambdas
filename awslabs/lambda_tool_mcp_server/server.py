@@ -338,7 +338,7 @@ def register_lambda_functions():
         logger.info('Registering Lambda functions as individual tools Custom')
         # all_functions = list_all_lambdas(AWS_REGION)
         
-        Get all functions with pagination
+        # Get all functions with pagination
         all_functions = []
         next_marker = None
         
