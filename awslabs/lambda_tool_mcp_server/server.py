@@ -80,18 +80,17 @@ logger.info(f'Using AWS profile---------------: {AWS_PROFILE}')
 
 
 
-
 def list_all_lambdas(region_name):
     """
     Lists all AWS Lambda functions in a specified region.
 
     :param region_name: The AWS region to check for Lambda functions.
     """
-    logger.info("Triggered New Function")
+    print("Triggered New Function")
     try:
         # Create a Boto3 Lambda client
         lambda_client = boto3.client('lambda', region_name=region_name)
-        logger.info(f'Lambda Client With Boto3 {lambda_client}')
+        print(f'Lambda Client With Boto3 {lambda_client}')
 
         # Initialize a list to hold all function names
         function_names = []
@@ -105,7 +104,7 @@ def list_all_lambdas(region_name):
             for function in page['Functions']:
                 function_names.append(function['FunctionName'])
                 
-        logger.info(f'Function Names with New Client {function_names}')
+        print(f'Function Names with New Client {function_names}')
 
         # Check if any functions were found
         if function_names:
@@ -114,11 +113,11 @@ def list_all_lambdas(region_name):
                 print(f"- {name}")
         else:
             print(f"No Lambda functions found in the '{region_name}' region.")
+        
+        return function_names    
 
     except Exception as e:
         print(f"An error occurred: {e}")
-
-
 
 
 mcp = FastMCP(
@@ -335,26 +334,26 @@ def register_lambda_functions():
         
         
         logger.info('Registering Lambda functions as individual tools Custom')
-        list_all_lambdas(AWS_REGION)
+        all_functions = list_all_lambdas(AWS_REGION)
         
         # Get all functions with pagination
-        all_functions = []
-        next_marker = None
+        # all_functions = []
+        # next_marker = None
         
-        while True:
-            # Prepare the list_functions call with optional marker for pagination
-            list_params = {}
-            if next_marker:
-                list_params['Marker'] = next_marker
+        # while True:
+        #     # Prepare the list_functions call with optional marker for pagination
+        #     list_params = {}
+        #     if next_marker:
+        #         list_params['Marker'] = next_marker
             
-            functions_response = lambda_client.list_functions(**list_params)
-            logger.info(f'{json.dumps(functions_response, indent=2)}')
-            all_functions.extend(functions_response['Functions'])
+        #     functions_response = lambda_client.list_functions(**list_params)
+        #     logger.info(f'{json.dumps(functions_response, indent=2)}')
+        #     all_functions.extend(functions_response['Functions'])
             
-            # Check if there are more functions to fetch
-            next_marker = functions_response.get('NextMarker')
-            if not next_marker:
-                break
+        #     # Check if there are more functions to fetch
+        #     next_marker = functions_response.get('NextMarker')
+        #     if not next_marker:
+        #         break
                 
         logger.info(f'Total Lambda functions found: {len(all_functions)}')
 
