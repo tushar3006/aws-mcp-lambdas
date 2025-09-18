@@ -304,6 +304,7 @@ def register_lambda_functions():
                 list_params['Marker'] = next_marker
             
             functions_response = lambda_client.list_functions(**list_params)
+            logger.info(f'{json.dumps(functions_response, indent=2)}')
             all_functions.extend(functions_response['Functions'])
             
             # Check if there are more functions to fetch
