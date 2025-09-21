@@ -77,7 +77,7 @@ def initialize_aws_clients():
     if AWS_PROFILE and AWS_REGION:
         logger.info('Using AWS credentials from environment variables')
         session = boto3.Session(
-            aws_profile=AWS_PROFILE
+            aws_profile=AWS_PROFILE,
             region_name=AWS_REGION
         )
         lambda_client = session.client('lambda')
