@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 AWS_PROFILE = os.environ.get('AWS_PROFILE')
 logger.info(f'AWS_PROFILE: {AWS_PROFILE}')
 
-AWS_REGION = os.environ.get('AWS_REGION', 'eu-west-1')
+AWS_REGION = os.environ.get('AWS_REGION')
 logger.info(f'AWS_REGION: {AWS_REGION}')
 
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
