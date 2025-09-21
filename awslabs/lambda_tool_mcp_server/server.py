@@ -14,11 +14,13 @@
 
 """awslabs lambda MCP Server implementation."""
 
+import argparse
 import boto3
 import json
 import logging
 import os
 import re
+import sys
 from mcp.server.fastmcp import Context, FastMCP
 from typing import Optional
 
@@ -57,26 +59,34 @@ logger.info(f'FUNCTION_TAG_VALUE: {FUNCTION_TAG_VALUE}')
 FUNCTION_INPUT_SCHEMA_ARN_TAG_KEY = os.environ.get('FUNCTION_INPUT_SCHEMA_ARN_TAG_KEY')
 logger.info(f'FUNCTION_INPUT_SCHEMA_ARN_TAG_KEY: {FUNCTION_INPUT_SCHEMA_ARN_TAG_KEY}')
 
-# Initialize AWS clients
-# Use AWS keys from environment if available, otherwise fall back to profile
+# AWS clients will be initialized when needed
+lambda_client = None
+schemas_client = None
 
 
-if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
-    logger.info('Using AWS credentials from environment variables')
-    session = boto3.Session(
-        aws_access_key_id=AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-        aws_session_token=AWS_SESSION_TOKEN,
-        region_name=AWS_REGION
-    )
-    lambda_client = session.client('lambda')
-    schemas_client = session.client('schemas')
-else:
-    lambda_client = boto3.client('lambda', region_name=AWS_REGION)
-    schemas_client = boto3.client('schemas', region_name=AWS_REGION)
+def initialize_aws_clients():
+    """Initialize AWS clients when needed."""
+    global lambda_client, schemas_client
+    
+    if lambda_client is not None:
+        return  # Already initialized
+    
+    logger.info('Initializing AWS clients...')
+    
+    # Use AWS keys from environment if available, otherwise fall back to profile
+    if AWS_PROFILE:
+        logger.info('Using AWS credentials from environment variables')
+        session = boto3.Session(
+            aws_profile=AWS_PROFILE
+            region_name=AWS_REGION
+        )
+        lambda_client = session.client('lambda')
+        schemas_client = session.client('schemas')
+    else:
+        lambda_client = boto3.client('lambda', region_name=AWS_REGION)
+        schemas_client = boto3.client('schemas', region_name=AWS_REGION)
 
-
-logger.info(f'Using AWS profile---------------: {AWS_PROFILE}')
+    logger.info(f'Using AWS profile: {AWS_PROFILE}')
 
 
 
@@ -89,8 +99,6 @@ def list_all_lambdas(region_name):
     logger.info("Triggered New Function")
     try:
         # Create a Boto3 Lambda client
-        lambda_client = boto3.client('lambda', region_name=region_name)
-        logger.info(f'Lambda Client With Boto3 {lambda_client}')
         sts = boto3.client("sts")
         identity = sts.get_caller_identity()
         logger.info(f"Client Running as: {identity}")
@@ -396,10 +404,28 @@ def register_lambda_functions():
         logger.error(f'Error registering Lambda functions as tools: {e}')
 
 
+
+
+
+def health_check():
+    """Print health status message."""
+    print('MCP server active')
+
+
 def main():
     """Run the MCP server with CLI argument support."""
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description='AWS Lambda MCP Server')
+    parser.add_argument('--health', action='store_true', help='Check server health')
+    args = parser.parse_args()
+    
+    # Handle health check
+    if args.health:
+        health_check()
+        return
+    initialize_aws_clients()
+    # Normal server startup
     register_lambda_functions()
-
     mcp.run()
 
 
