@@ -82,9 +82,12 @@ def initialize_aws_clients():
         )
         lambda_client = session.client('lambda')
         schemas_client = session.client('schemas')
-    else:
+    elif AWS_REGION:
         lambda_client = boto3.client('lambda', region_name=AWS_REGION)
         schemas_client = boto3.client('schemas', region_name=AWS_REGION)
+    else
+        logger.error('No AWS credentials or region provided')
+        raise ValueError('No AWS credentials or region provided')
 
     logger.info(f'Using AWS profile: {AWS_PROFILE}')
 
