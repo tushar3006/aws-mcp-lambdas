@@ -74,7 +74,7 @@ def initialize_aws_clients():
     logger.info('Initializing AWS clients...')
     
     # Use AWS keys from environment if available, otherwise fall back to profile
-    if AWS_PROFILE:
+    if AWS_PROFILE and AWS_REGION:
         logger.info('Using AWS credentials from environment variables')
         session = boto3.Session(
             aws_profile=AWS_PROFILE
