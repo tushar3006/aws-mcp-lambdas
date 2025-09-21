@@ -99,7 +99,6 @@ def list_all_lambdas(region_name):
 
     :param region_name: The AWS region to check for Lambda functions.
     """
-    logger.info("Triggered New Function")
     try:
         # Create a Boto3 Lambda client
         sts = boto3.client("sts")
@@ -346,7 +345,6 @@ def register_lambda_functions():
         logger.info('Registering Lambda functions as individual tools...')
         
         
-        logger.info('Registering Lambda functions as individual tools Custom')
         # all_functions = list_all_lambdas(AWS_REGION)
         
         # Get all functions with pagination
@@ -360,7 +358,6 @@ def register_lambda_functions():
                 list_params['Marker'] = next_marker
             
             functions_response = lambda_client.list_functions(**list_params)
-            logger.info(f'{json.dumps(functions_response, indent=2)}')
             all_functions.extend(functions_response['Functions'])
             
             # Check if there are more functions to fetch
