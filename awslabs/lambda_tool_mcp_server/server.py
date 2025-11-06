@@ -72,7 +72,6 @@ def initialize_aws_clients():
         return  # Already initialized
     
     logger.info('Initializing AWS clients...')
-    
     # Try using AWS profile and fallback to ecs controls
     if AWS_PROFILE and AWS_REGION:
         logger.info('Using AWS credentials from environment variables')
@@ -143,6 +142,8 @@ mcp = FastMCP(
 def validate_function_name(function_name: str) -> bool:
     """Validate that the function name is valid and can be called."""
     # If both prefix and list are empty, consider all functions valid
+    
+    print(function_name, FUNCTION_LIST, "******************************")
     if not FUNCTION_PREFIX and not FUNCTION_LIST:
         return True
 
