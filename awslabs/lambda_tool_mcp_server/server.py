@@ -365,7 +365,7 @@ def register_lambda_functions():
             if not next_marker:
                 break
                 
-        logger.info(f'Total Lambda functions found: {len(all_functions)} in FUNCTION_LIST: {FUNCTION_LIST}')
+        logger.info(f'Total Lambda functions found: {all_functions} now matching FUNCTION_LIST: {FUNCTION_LIST}')
 
         # First filter by function name if prefix or list is set
         if FUNCTION_PREFIX or FUNCTION_LIST:
