@@ -143,7 +143,6 @@ def validate_function_name(function_name: str) -> bool:
     """Validate that the function name is valid and can be called."""
     # If both prefix and list are empty, consider all functions valid
     
-    print(function_name, FUNCTION_LIST, "******************************")
     if not FUNCTION_PREFIX and not FUNCTION_LIST:
         return True
 
@@ -366,7 +365,7 @@ def register_lambda_functions():
             if not next_marker:
                 break
                 
-        logger.info(f'Total Lambda functions found: {len(all_functions)}')
+        logger.info(f'Total Lambda functions found: {len(all_functions)} in FUNCTION_LIST: {FUNCTION_LIST}')
 
         # First filter by function name if prefix or list is set
         if FUNCTION_PREFIX or FUNCTION_LIST:
